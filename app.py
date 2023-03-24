@@ -15,6 +15,7 @@ load_dotenv()
 SECRET_KEY = os.environ.get('SECRET_KEY')
 APP_ENV = os.environ.get('APP_ENV')
 DEBUG = os.environ.get('DEBUG')
+MONGO_URI = os.environ.get('MONGO_URI')
 
 
 app = Flask(__name__)
@@ -24,7 +25,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config['JWT_SECRET_KEY'] = SECRET_KEY
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
-app.config["MONGO_URI"] = "mongodb://localhost:27017/flaskCrashCourse"
+app.config["MONGO_URI"] = MONGO_URI
 
 
 CORS(app)
