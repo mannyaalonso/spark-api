@@ -38,7 +38,7 @@ db = MongoEngine(app)
 
 
 class Likes(db.EmbeddedDocument):
-    users = db.StringField()
+    users = db.EmbeddedDocumentListField('User')
     creation_date = db.DateTimeField()
     modified_date = db.DateTimeField(default=datetime.datetime.now)
 
@@ -50,7 +50,7 @@ class Likes(db.EmbeddedDocument):
 
 
 class Dislikes(db.EmbeddedDocument):
-    users = db.StringField()
+    users = db.EmbeddedDocumentListField('User')
     creation_date = db.DateTimeField()
     modified_date = db.DateTimeField(default=datetime.datetime.now)
 
