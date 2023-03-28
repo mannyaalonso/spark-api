@@ -1,6 +1,7 @@
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask import Flask, request, session, jsonify
 from flask_mongoengine import MongoEngine
+from mongoengine import connect
 from flask_session import Session
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
@@ -16,6 +17,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 APP_ENV = os.environ.get('APP_ENV')
 DEBUG = os.environ.get('DEBUG')
 MONGO_URI = os.environ.get('MONGO_URI')
+SALT_ROUNDS = os.environ.get('SALT_ROUNDS')
 
 
 app = Flask(__name__)
@@ -25,22 +27,38 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config['JWT_SECRET_KEY'] = SECRET_KEY
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
-app.config["MONGO_URI"] = MONGO_URI
+app.config["MONGODB_SETTINGS"] = {'DB': "spark", "host": MONGO_URI}
 
 
 CORS(app)
 Session(app)
+JWTManager(app)
 bcrypt = Bcrypt(app)
 db = MongoEngine(app)
-jwt = JWTManager(app)
 
 
 class Likes(db.EmbeddedDocument):
     users = db.StringField()
+    creation_date = db.DateTimeField()
+    modified_date = db.DateTimeField(default=datetime.datetime.now)
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.datetime.now()
+        self.modified_date = datetime.datetime.now()
+        return super(Likes, self).save(*args, **kwargs)
 
 
 class Dislikes(db.EmbeddedDocument):
     users = db.StringField()
+    creation_date = db.DateTimeField()
+    modified_date = db.DateTimeField(default=datetime.datetime.now)
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.datetime.now()
+        self.modified_date = datetime.datetime.now()
+        return super(Dislikes, self).save(*args, **kwargs)
 
 
 class Preferences(db.EmbeddedDocument):
@@ -52,16 +70,40 @@ class Preferences(db.EmbeddedDocument):
     age_dealbreaker = db.BooleanField()
     ethnicity = db.ListField(db.StringField())
     religion = db.ListField(db.StringField())
-    
+    creation_date = db.DateTimeField()
+    modified_date = db.DateTimeField(default=datetime.datetime.now)
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.datetime.now()
+        self.modified_date = datetime.datetime.now()
+        return super(Preferences, self).save(*args, **kwargs)
+
 
 class Pictures(db.EmbeddedDocument):
     title = db.StringField()
     image = db.StringField()
+    creation_date = db.DateTimeField()
+    modified_date = db.DateTimeField(default=datetime.datetime.now)
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.datetime.now()
+        self.modified_date = datetime.datetime.now()
+        return super(Pictures, self).save(*args, **kwargs)
 
 
 class Prompts(db.EmbeddedDocument):
     title = db.StringField()
     description = db.StringField()
+    creation_date = db.DateTimeField()
+    modified_date = db.DateTimeField(default=datetime.datetime.now)
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.datetime.now()
+        self.modified_date = datetime.datetime.now()
+        return super(Prompts, self).save(*args, **kwargs)
 
 
 class Virtues(db.EmbeddedDocument):
@@ -85,7 +127,15 @@ class Virtues(db.EmbeddedDocument):
     dating_intentions_visibility = db.BooleanField()
     relationship_type = db.ListField(db.StringField())
     relationship_type_visibility = db.BooleanField()
-    
+    creation_date = db.DateTimeField()
+    modified_date = db.DateTimeField(default=datetime.datetime.now)
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.datetime.now()
+        self.modified_date = datetime.datetime.now()
+        return super(Virtues, self).save(*args, **kwargs)
+
 
 class Vitals(db.EmbeddedDocument):
     name = db.StringField()
@@ -114,6 +164,14 @@ class Vitals(db.EmbeddedDocument):
     pets_visibility = db.BooleanField()
     zodiac_sign = db.StringField()
     zodiac_sign_visibility = db.BooleanField()
+    creation_date = db.DateTimeField()
+    modified_date = db.DateTimeField(default=datetime.datetime.now)
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.datetime.now()
+        self.modified_date = datetime.datetime.now()
+        return super(Vitals, self).save(*args, **kwargs)
 
 
 class Vices(db.EmbeddedDocument):
@@ -125,6 +183,14 @@ class Vices(db.EmbeddedDocument):
     marijuana_visibility = db.BooleanField()
     drugs = db.StringField()
     drugs_visibility = db.BooleanField()
+    creation_date = db.DateTimeField()
+    modified_date = db.DateTimeField(default=datetime.datetime.now)
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.datetime.now()
+        self.modified_date = datetime.datetime.now()
+        return super(Vices, self).save(*args, **kwargs)
 
 
 class User(db.Document):
@@ -141,6 +207,14 @@ class User(db.Document):
     virtues = db.EmbeddedDocumentField(Virtues)
     vitals = db.EmbeddedDocumentField(Vitals)
     vices = db.EmbeddedDocumentField(Vices)
+    creation_date = db.DateTimeField()
+    modified_date = db.DateTimeField(default=datetime.datetime.now)
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.datetime.now()
+        self.modified_date = datetime.datetime.now()
+        return super(User, self).save(*args, **kwargs)
 
 
 def index():
@@ -156,7 +230,7 @@ def signup():
     email = User.objects(email=body.get("email")).first()
     if email:
         return {"message": "Email already exists"}, 500
-    hashed = bcrypt.generate_password_hash(body.get("password"), 10)
+    hashed = bcrypt.generate_password_hash(body.get("password"), int(SALT_ROUNDS))
     user.email = body.get("email")
     user.password = hashed
     user.save()
@@ -171,7 +245,7 @@ def signin():
         if bcrypt.check_password_hash(user["password"], body.get("password")):
             session['email'] = body.get('email')
             access_token = create_access_token(identity=body.get("email"))
-            return jsonify(access_token=access_token, user=user), 200
+            return jsonify(access_token=access_token, user=user, message="User logged in"), 200
         return {"message": "Email & Password combination is wrong"}, 500
     return {"message": "User does not exist"}, 500
 
@@ -238,4 +312,4 @@ def delete_user(id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=8888)
