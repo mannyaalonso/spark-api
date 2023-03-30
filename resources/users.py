@@ -2,6 +2,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import request, jsonify, make_response
 from flask_restful import Resource
 from models.user import User
+from geojson import Point
 
     
 class Users(Resource):
@@ -31,6 +32,7 @@ class SingleUser(Resource):
       id = User.objects(id=id)
       if user and id:
         body = request.get_json()
+      
         id.update(**body)
         return make_response(jsonify(id), 200)
       return {"message": "User id didn't match"}, 404

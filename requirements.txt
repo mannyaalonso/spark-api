@@ -16,6 +16,7 @@ Flask-PyMongo==2.3.0
 Flask-RESTful==0.3.9
 Flask-Session==0.4.0
 Flask-WTF==1.1.1
+geojson==3.0.1
 idna==3.4
 itsdangerous==2.1.2
 Jinja2==3.1.2
