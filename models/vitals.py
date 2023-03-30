@@ -5,7 +5,6 @@ from models.db import db
 class Vitals(db.EmbeddedDocument):
     first_name = db.StringField()
     last_name = db.StringField()
-    name_visibility = db.BooleanField()
     gender = db.StringField()
     gender_visibility = db.BooleanField()
     pronouns = db.ListField(db.StringField())
@@ -17,8 +16,6 @@ class Vitals(db.EmbeddedDocument):
     age_visibility = db.BooleanField()
     height = db.StringField()
     height_visibility = db.BooleanField()
-    location = db.PointField()
-    location_visibility = db.BooleanField()
     ethnicty = db.ListField(db.StringField())
     ethnicity_visibility = db.BooleanField()
     children = db.StringField()

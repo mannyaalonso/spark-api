@@ -1,5 +1,5 @@
 from flask_jwt_extended import JWTManager
-from resources.users import Users, SingleUser
+from resources.users import Users, SingleUser, UserLocation
 from resources.auth import Signin, Signup, Logout, CheckSession
 from flask_session import Session
 from dotenv import load_dotenv
@@ -44,6 +44,7 @@ api.add_resource(Signin, '/signin')
 api.add_resource(Logout, '/logout')
 api.add_resource(SingleUser, '/users/<id>')
 api.add_resource(CheckSession, '/auth/session')
+api.add_resource(UserLocation, '/users/location')
 
 
 if __name__ == "__main__":

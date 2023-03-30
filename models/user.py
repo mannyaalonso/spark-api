@@ -8,11 +8,14 @@ from models.prompts import Prompts
 from models.virtues import Virtues
 from models.vitals import Vitals
 from models.vices import Vices
+from mongoengine import *
 
 
 class User(db.Document):
     email = db.StringField()
     password = db.BinaryField()
+    location = db.PointField(auto_index=False)
+    location_visibility = db.BooleanField()
     birthdate = db.StringField()
     pause = db.BooleanField()
     subscriber = db.BooleanField()
@@ -26,6 +29,10 @@ class User(db.Document):
     vices = db.EmbeddedDocumentField(Vices)
     creation_date = db.DateTimeField()
     modified_date = db.DateTimeField(default=datetime.now)
+
+    meta = {
+        'indexes': [[("location", "2dsphere")]]
+    }
 
     def save(self, *args, **kwargs):
         if not self.creation_date:
