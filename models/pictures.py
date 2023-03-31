@@ -3,8 +3,8 @@ from models.db import db
 
 
 class Pictures(db.EmbeddedDocument):
-    title = db.StringField()
-    image = db.StringField()
+    titles = db.ListField()
+    images = db.ListField()
     creation_date = db.DateTimeField()
     modified_date = db.DateTimeField(default=datetime.now)
 

@@ -14,13 +14,13 @@ SALT_ROUNDS = os.environ.get('SALT_ROUNDS')
 
 class Signup(Resource):
     def post(self):
-      user = User()
       body = request.get_json()
       email = User.objects(email=body.get("email")).first()
       if email:
           return {"message": "Email already exists"}, 500
       hashed = bcrypt.generate_password_hash(
           body.get("password"), int(SALT_ROUNDS))
+      user = User()
       user.email = body.get("email")
       user.password = hashed
       user.save()

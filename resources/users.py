@@ -60,20 +60,9 @@ class UserLocation(Resource):
     features = []
     for document in User.objects(__raw__=query):
         feature = Feature(geometry=document.location,
-                          properties={'id': str(document.id)})
+                          properties={'id': str(document.id), 'vitals': document.vitals, 'vices': document.vices, 'virtues': document.virtues, 'prompts': document.prompts, 'pictures': document.pictures})
         features.append(feature)
 
     feature_collection = FeatureCollection(features)
     return make_response(jsonify(feature_collection))
-  
-  @jwt_required()
-  def put(self, id): 
-    current_user = get_jwt_identity()
-    user = User.objects(email=current_user).first()
-    id = User.objects(id=id)
-    if user and id:
-      body = request.get_json()
-      
-      return make_response(jsonify(id), 200)
-    return {"message": "User id didn't match"}, 404
 
