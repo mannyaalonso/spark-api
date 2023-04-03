@@ -1,5 +1,6 @@
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask import request, session, jsonify, make_response
+from flask_cors import CORS, cross_origin
 from flask_restful import Resource
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
@@ -13,6 +14,7 @@ bcrypt = Bcrypt()
 SALT_ROUNDS = os.environ.get('SALT_ROUNDS')
 
 class Signup(Resource):
+    @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
     def post(self):
       body = request.get_json()
       email = User.objects(email=body.get("email")).first()

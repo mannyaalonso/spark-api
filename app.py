@@ -4,7 +4,7 @@ from resources.auth import Signin, Signup, Logout, CheckSession
 from flask_session import Session
 from dotenv import load_dotenv
 from flask_restful import Api
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from mongoengine import *
 from models.db import db
 from flask import Flask
@@ -46,4 +46,5 @@ api.add_resource(UserLocation, '/users/location')
 
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
