@@ -48,21 +48,25 @@ class SingleUser(Resource):
       return {"message": "User id didn't match"}, 404
     
 class UserLocation(Resource):
+  @jwt_required()
   def get(self):
-    latitude = request.args.get('lat')
-    longitude = request.args.get('long')
-    distance_in_meters = float(request.args.get('distance', 10000))
+    current_user = get_jwt_identity()
+    user = User.objects(email=current_user).first()
+    if user:
+      latitude = request.args.get('lat')
+      longitude = request.args.get('long')
+      distance_in_meters = float(request.args.get('distance', 10000))
 
-    point = Point((float(longitude), float(latitude)))
-    query = {'location': {
-        '$near': {'$geometry': point, '$maxDistance': distance_in_meters}}}
+      point = Point((float(longitude), float(latitude)))
+      query = {'location': {
+          '$near': {'$geometry': point, '$maxDistance': distance_in_meters}}}
 
-    features = []
-    for document in User.objects(__raw__=query):
+      features = []
+      for document in User.objects(__raw__=query):
         feature = Feature(geometry=document.location,
-                          properties={'id': str(document.id), 'vitals': document.vitals, 'vices': document.vices, 'virtues': document.virtues, 'prompts': document.prompts, 'pictures': document.pictures})
+                          properties={'id': str(document.id), 'vitals': document.vitals, 'vices': document.vices, 'virtues': document.virtues, 'prompts': document.prompts, 'images': document.images, 'location': document.location})
         features.append(feature)
 
-    feature_collection = FeatureCollection(features)
-    return make_response(jsonify(feature_collection))
+      feature_collection = FeatureCollection(features)
+      return make_response(jsonify(feature_collection))
 

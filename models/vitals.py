@@ -12,7 +12,7 @@ class Vitals(db.EmbeddedDocument):
     sexuality = db.StringField()
     sexuality_visibility = db.BooleanField()
     age = db.StringField()
-    age_update = db.IntField()
+    age_update = db.IntField(default=0)
     age_visibility = db.BooleanField()
     height = db.StringField()
     height_visibility = db.BooleanField()
