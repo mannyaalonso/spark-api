@@ -14,7 +14,7 @@ bcrypt = Bcrypt()
 SALT_ROUNDS = os.environ.get('SALT_ROUNDS')
 
 class Signup(Resource):
-    @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
+    @cross_origin()
     def post(self):
       body = request.get_json()
       email = User.objects(email=body.get("email")).first()
@@ -29,6 +29,7 @@ class Signup(Resource):
       return {"message": "User created"}, 200
 
 class Signin(Resource):
+    @cross_origin()
     def post(self):
       body = request.get_json()
       user = User.objects(email=body.get("email")).first()
@@ -41,6 +42,7 @@ class Signin(Resource):
       return {"message": "User does not exist"}, 500
     
 class CheckSession(Resource):
+    @cross_origin()
     @jwt_required()
     def get(self):
       current_user = get_jwt_identity()
@@ -50,6 +52,7 @@ class CheckSession(Resource):
       return {"message": "User not authenticated"}, 404
        
 class Logout(Resource):
+    @cross_origin()
     def post(self):
       session.pop("email", None)
       return {"message": "User logged out"}, 200
