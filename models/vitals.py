@@ -3,10 +3,6 @@ from models.db import db
 
 
 class Vitals(db.EmbeddedDocument):
-    name = db.StringField()
-    name_visibility = db.StringField()
-    location = db.StringField()
-    location_visibility = db.StringField()
     first_name = db.StringField()
     last_name = db.StringField()
     gender = db.StringField()
