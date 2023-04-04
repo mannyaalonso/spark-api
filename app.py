@@ -36,6 +36,7 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 app.config["MONGODB_SETTINGS"] = {'DB': "spark", "host": MONGO_URI}
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+
 api.add_resource(Users, '/users')
 api.add_resource(Signup, '/signup')
 api.add_resource(Signin, '/signin')
