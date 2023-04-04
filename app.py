@@ -4,7 +4,7 @@ from resources.auth import Signin, Signup, Logout, CheckSession
 from flask_session import Session
 from dotenv import load_dotenv
 from flask_restful import Api
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from mongoengine import *
 from models.db import db
 from flask import Flask
