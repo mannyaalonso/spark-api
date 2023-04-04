@@ -19,7 +19,7 @@ class Signup(Resource):
       body = request.get_json()
       email = User.objects(email=body.get("email")).first()
       if email:
-          return {"message": "Email already exists"}, 500
+        return {"message": "Email already exists"}, 500
       hashed = bcrypt.generate_password_hash(
           body.get("password"), int(SALT_ROUNDS))
       user = User()
@@ -35,7 +35,6 @@ class Signin(Resource):
       user = User.objects(email=body.get("email")).first()
       if user:
         if bcrypt.check_password_hash(user["password"], body.get("password")):
-          session['email'] = body.get('email')
           access_token = create_access_token(identity=body.get("email"))
           return make_response(jsonify(access_token=access_token, user=user, message="User logged in"), 200)
         return {"message": "Email & Password combination is wrong"}, 500

@@ -3,7 +3,6 @@ from models.db import db
 from models.likes import Likes
 from models.dislikes import Dislikes
 from models.preferences import Preferences
-from models.pictures import Pictures
 from models.prompts import Prompts
 from models.virtues import Virtues
 from models.vitals import Vitals
@@ -24,7 +23,6 @@ class User(db.Document):
     likes = db.EmbeddedDocumentListField(Likes)
     dislikes = db.EmbeddedDocumentListField(Dislikes)
     preferences = db.EmbeddedDocumentField(Preferences)
-    pictures = db.EmbeddedDocumentField(Pictures)
     virtues = db.EmbeddedDocumentField(Virtues)
     vitals = db.EmbeddedDocumentField(Vitals)
     vices = db.EmbeddedDocumentField(Vices)

@@ -27,12 +27,23 @@ JWTManager(app)
 api = Api(app)
 db.init_app(app)
 
+SECRET_KEY = os.environ.get('SECRET_KEY')
+MONGO_URI = os.environ.get('MONGO_URI')
+
+app = Flask(__name__)
+
+app.config["MONGO_URI"] = MONGO_URI
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config['JWT_SECRET_KEY'] = SECRET_KEY
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
-app.config["MONGODB_SETTINGS"] = {'DB': "spark", "host": MONGO_URI}
-app.config['CORS_HEADERS'] = 'Content-Type'
+
+# app.config["SESSION_PERMANENT"] = False
+# app.config["SESSION_TYPE"] = "filesystem"
+# app.config['JWT_SECRET_KEY'] = SECRET_KEY
+# app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
+# app.config["MONGODB_SETTINGS"] = {'DB': "spark", "host": MONGO_URI}
+# app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 api.add_resource(Users, '/users')
@@ -45,5 +56,4 @@ api.add_resource(UserLocation, '/users/location')
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
