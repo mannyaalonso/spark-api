@@ -11,13 +11,10 @@ from flask import Flask
 import datetime
 import os
 
-
 load_dotenv()
-
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 MONGO_URI = os.environ.get('MONGO_URI')
-
 
 app = Flask(__name__)
 
@@ -45,7 +42,6 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 # app.config["MONGODB_SETTINGS"] = {'DB': "spark", "host": MONGO_URI}
 # app.config['CORS_HEADERS'] = 'Content-Type'
 
-
 api.add_resource(Users, '/users')
 api.add_resource(Signup, '/signup')
 api.add_resource(Signin, '/signin')
@@ -53,7 +49,6 @@ api.add_resource(Logout, '/logout')
 api.add_resource(SingleUser, '/users/<id>')
 api.add_resource(CheckSession, '/auth/session')
 api.add_resource(UserLocation, '/users/location')
-
 
 if __name__ == "__main__":
     app.run(debug=True)
