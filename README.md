@@ -1,15 +1,25 @@
-# Spark API
+## Date: 04/04/2023
 
-## Description 
+---
 
-## Navigating
+### By: Manuel Alonso
 
-## Screenshots of application
+---
 
-## Technology Used
+#### [Manuel's GitHub](https://github.com/mannyaalonso) | [Manuel's LinkedIn](https://www.linkedin.com/in/mannyaalonso/)
 
-`Python` `Flask` `MongoDB`
+---
 
-## Link to Socials
+### **_Description_**
 
-## Credits
+---
+
+### **_Technologies Used_**
+
+-   Python
+-   Flask
+-   MongoDB
+
+### **_Screenshots_**
+
+---
