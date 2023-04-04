@@ -24,11 +24,6 @@ JWTManager(app)
 api = Api(app)
 db.init_app(app)
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
-MONGO_URI = os.environ.get('MONGO_URI')
-
-app = Flask(__name__)
-
 app.config["MONGO_URI"] = MONGO_URI
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
