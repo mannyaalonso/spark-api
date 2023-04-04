@@ -16,8 +16,6 @@ load_dotenv()
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
-APP_ENV = os.environ.get('APP_ENV')
-DEBUG = os.environ.get('DEBUG')
 MONGO_URI = os.environ.get('MONGO_URI')
 
 
